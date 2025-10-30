@@ -1,28 +1,28 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-import workoutsRoutes from './routes/workouts.js';
-import userRoutes from './routes/user.js';
-
-dotenv.config();
-const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const workoutRoutes = require('./routes/workouts');
+const userRoutes = require('./routes/user');
+//Create an Express application
+const app = express()
+//middleware
 app.use(express.json());
-app.use('/api/workouts', workoutsRoutes);
+app.use((req, res, next)=> {
+  console.log(req.path, req.method);
+  next();
+});
+//routes
+app.use('/api/workouts', workoutRoutes);
 app.use('/api/user', userRoutes);
-
-// Serve frontend
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, '../frontend/dist', 'index.html'))
-  );
-}
-
+//connect to the database
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`)))
-  .catch((err) => console.log(err));
+.then(() => {
+  //listen for requests
+  app.listen(process.env.PORT, () => {
+    console.log(`Connected to DB & Server is running on port ${process.env.PORT}`);
+  });
+})
+.catch((error) => {
+  console.log(error);
+});
+//listen on port 8000
