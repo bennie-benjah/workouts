@@ -17,11 +17,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Enable CORS before any routes or middleware
-app.use(cors({
-  origin: 'https://workouts-pal.vercel.app', // your Vercel frontend URL
-  credentials: true
-}));
+// CORS configuration
+const allowedOrigins = [
+  'https://workouts-pal.vercel.app/', // <-- replace with your frontend URL
+  'http://localhost:3000'             // local dev
+];
 
 app.use(cors({
   origin: allowedOrigins,
