@@ -5,44 +5,48 @@ const cors = require('cors');
 const workoutRoutes = require('./routes/workouts');
 const userRoutes = require('./routes/user');
 
-// Create Express app
 const app = express();
 
-// Middleware
+// ✅ CORS configuration (must come before routes)
+const allowedOrigins = [
+  'https://workouts-pal.vercel.app',  // production
+  'http://localhost:3000'             // local dev
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
+// ✅ Express middleware
 app.use(express.json());
 
-// Log every request
+// ✅ Simple request logger
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
 });
 
-// CORS configuration
-const allowedOrigins = [
-  'https://workouts-pal.vercel.app/', // <-- replace with your frontend URL
-  'http://localhost:3000'             // local dev
-];
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
-
-// Routes
+// ✅ Routes
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/user', userRoutes);
 
-// Root route
+// ✅ Root route
 app.get('/', (req, res) => {
   res.send('API is running successfully 🚀');
 });
 
-// Connect to MongoDB and start server
+// ✅ Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     const port = process.env.PORT || 10000;
     app.listen(port, () => {
-      console.log(`Connected to DB & Server is running on port ${port}`);
+      console.log(`Connected to DB & Server running on port ${port}`);
     });
   })
   .catch((error) => {
