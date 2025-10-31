@@ -35,6 +35,7 @@ app.use((req, res, next) => {
 // ✅ Routes
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/auth', require('./routes/auth'));
 
 // ✅ Root route
 app.get('/', (req, res) => {
