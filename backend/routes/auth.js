@@ -41,7 +41,7 @@ router.get('/google/callback', async (req, res) => {
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
         code,
-        redirect_uri: `${process.env.REACT_APP_API_URL}/auth/google/callback`,
+        redirect_uri: `${process.env.FRONTEND_URL}/auth/google/callback`,
         grant_type: 'authorization_code',
       }),
     });
