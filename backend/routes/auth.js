@@ -12,7 +12,8 @@ router.get('/google', (req, res) => {
     // Redirect to Google OAuth
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams({
       client_id: process.env.GOOGLE_CLIENT_ID,
-      redirect_uri: `${process.env.REACT_APP_API_BASE_URL}/auth/google/callback`,
+      redirect_uri: `${process.env.SERVER_URL}/auth/google/callback`,
+
       response_type: 'code',
       scope: 'openid profile email',
       access_type: 'offline',
